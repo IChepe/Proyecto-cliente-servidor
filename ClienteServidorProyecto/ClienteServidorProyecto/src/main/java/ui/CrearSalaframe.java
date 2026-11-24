@@ -1,22 +1,103 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package ui;
 
 /**
+ * Diálogo modal para configurar y crear una sala (HU-01).
+ * Solo interfaz: la lógica de cada botón la conecta el equipo de back.
  *
  * @author gabri
  */
-public class CrearSalaframe extends javax.swing.JFrame {
-    
+public class CrearSalaframe extends javax.swing.JDialog {
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CrearSalaframe.class.getName());
 
     /**
      * Creates new form CrearSalaframe
      */
-    public CrearSalaframe() {
+    public CrearSalaframe(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
+        cmbMaxJugadores.setSelectedItem("8 jugadores");
+        cmbTiempo.setSelectedItem("20 segundos");
+        estilizarCombos(cmbCategoria, cmbMaxJugadores, cmbCantidadPreguntas, cmbTiempo);
+        efectoHover(btnCancelarS, btnCrear);
+        getRootPane().setDefaultButton(btnCrear);
+        setLocationRelativeTo(parent);
+    }
+
+    /** Combo plano: fondo blanco, flecha gris y texto con margen, como en el diseño. */
+    private void estilizarCombos(javax.swing.JComboBox<?>... combos) {
+        for (javax.swing.JComboBox<?> combo : combos) {
+            combo.setUI(new javax.swing.plaf.basic.BasicComboBoxUI() {
+                @Override
+                protected void installDefaults() {
+                    super.installDefaults();
+                    squareButton = false;
+                }
+
+                @Override
+                public void paintCurrentValueBackground(java.awt.Graphics g, java.awt.Rectangle bounds, boolean hasFocus) {
+                    g.setColor(comboBox.getBackground());
+                    g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                }
+
+                @Override
+                protected javax.swing.JButton createArrowButton() {
+                    javax.swing.JButton flecha = new javax.swing.plaf.basic.BasicArrowButton(
+                            javax.swing.SwingConstants.SOUTH, java.awt.Color.WHITE, java.awt.Color.WHITE,
+                            new java.awt.Color(63, 63, 70), java.awt.Color.WHITE);
+                    flecha.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+                    flecha.setPreferredSize(new java.awt.Dimension(32, 32));
+                    return flecha;
+                }
+            });
+            combo.setRenderer(new javax.swing.DefaultListCellRenderer() {
+                @Override
+                public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value,
+                        int index, boolean isSelected, boolean cellHasFocus) {
+                    super.getListCellRendererComponent(list, value, index, isSelected, false);
+                    setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 11, 6, 11));
+                    if (index == -1) {
+                        setBackground(java.awt.Color.WHITE);
+                        setForeground(new java.awt.Color(39, 39, 42));
+                    }
+                    return this;
+                }
+            });
+        }
+    }
+
+    /** Aclara (u oscurece si es blanco) el botón al pasar el mouse. */
+    private void efectoHover(javax.swing.AbstractButton... botones) {
+        for (javax.swing.AbstractButton boton : botones) {
+            boton.addMouseListener(new java.awt.event.MouseAdapter() {
+                private java.awt.Color base;
+
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent e) {
+                    if (boton.isEnabled()) {
+                        base = boton.getBackground();
+                        boton.setBackground(base.equals(java.awt.Color.WHITE)
+                                ? new java.awt.Color(244, 244, 245)
+                                : new java.awt.Color(
+                                        base.getRed() + (255 - base.getRed()) * 15 / 100,
+                                        base.getGreen() + (255 - base.getGreen()) * 15 / 100,
+                                        base.getBlue() + (255 - base.getBlue()) * 15 / 100));
+                    }
+                }
+
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent e) {
+                    if (base != null) {
+                        boton.setBackground(base);
+                        base = null;
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -28,232 +109,190 @@ public class CrearSalaframe extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenu1 = new javax.swing.JMenu();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        pnlFondo = new javax.swing.JPanel();
+        lblEtiqueta = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        lblSubtitulo = new javax.swing.JLabel();
+        lblNombreSala = new javax.swing.JLabel();
         txtNombreSala = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        txtNombreCategoria = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        txtCantidadP = new javax.swing.JTextField();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        txtCantidadJ = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        btnCrear = new javax.swing.JButton();
+        lblCategoria = new javax.swing.JLabel();
+        cmbCategoria = new javax.swing.JComboBox<>();
+        lblMaxJugadores = new javax.swing.JLabel();
+        cmbMaxJugadores = new javax.swing.JComboBox<>();
+        lblCantidadPreguntas = new javax.swing.JLabel();
+        cmbCantidadPreguntas = new javax.swing.JComboBox<>();
+        lblTiempo = new javax.swing.JLabel();
+        cmbTiempo = new javax.swing.JComboBox<>();
+        lblInfo = new javax.swing.JLabel();
         btnCancelarS = new javax.swing.JButton();
+        btnCrear = new javax.swing.JButton();
 
-        jMenu1.setText("jMenu1");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Crear sala");
+        setResizable(false);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new java.awt.Color(255, 255, 255));
+        pnlFondo.setBackground(new java.awt.Color(255, 255, 255));
+        pnlFondo.setPreferredSize(new java.awt.Dimension(480, 446));
+        pnlFondo.setLayout(null);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        lblEtiqueta.setFont(new java.awt.Font("Segoe UI", 1, 11)); // NOI18N
+        lblEtiqueta.setForeground(new java.awt.Color(124, 58, 237));
+        lblEtiqueta.setText("NUEVA SALA");
+        pnlFondo.add(lblEtiqueta);
+        lblEtiqueta.setBounds(24, 20, 300, 16);
 
-        jLabel1.setText("Crear Sala");
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(24, 24, 27));
+        lblTitulo.setText("Crear sala");
+        pnlFondo.add(lblTitulo);
+        lblTitulo.setBounds(24, 38, 300, 30);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        lblSubtitulo.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lblSubtitulo.setForeground(new java.awt.Color(113, 113, 122));
+        lblSubtitulo.setText("Configura la partida e invita a tus amigos.");
+        pnlFondo.add(lblSubtitulo);
+        lblSubtitulo.setBounds(24, 70, 430, 20);
 
-        jLabel2.setForeground(new java.awt.Color(102, 0, 255));
-        jLabel2.setText("Nueva Sala");
+        lblNombreSala.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblNombreSala.setForeground(new java.awt.Color(63, 63, 70));
+        lblNombreSala.setText("Nombre de la sala");
+        pnlFondo.add(lblNombreSala);
+        lblNombreSala.setBounds(24, 108, 200, 18);
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel3.setText("Crear Sala");
+        txtNombreSala.setBackground(new java.awt.Color(255, 255, 255));
+        txtNombreSala.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        txtNombreSala.setForeground(new java.awt.Color(24, 24, 27));
+        txtNombreSala.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 212, 216), 1), javax.swing.BorderFactory.createEmptyBorder(0, 11, 0, 11)));
+        txtNombreSala.setText("Partida con amigos");
+        pnlFondo.add(txtNombreSala);
+        txtNombreSala.setBounds(24, 130, 432, 38);
 
-        jLabel4.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel4.setText("Configura la partida e invita a tus amigos");
+        lblCategoria.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblCategoria.setForeground(new java.awt.Color(63, 63, 70));
+        lblCategoria.setText("Categoría");
+        pnlFondo.add(lblCategoria);
+        lblCategoria.setBounds(24, 180, 200, 18);
 
-        jLabel5.setText("Nombre de la Sala");
+        cmbCategoria.setBackground(new java.awt.Color(255, 255, 255));
+        cmbCategoria.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        cmbCategoria.setForeground(new java.awt.Color(39, 39, 42));
+        cmbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "General" }));
+        cmbCategoria.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        cmbCategoria.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 212, 216), 1));
+        pnlFondo.add(cmbCategoria);
+        cmbCategoria.setBounds(24, 202, 206, 38);
 
-        txtNombreSala.addActionListener(this::txtNombreSalaActionPerformed);
+        lblMaxJugadores.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblMaxJugadores.setForeground(new java.awt.Color(63, 63, 70));
+        lblMaxJugadores.setText("Máx. jugadores");
+        pnlFondo.add(lblMaxJugadores);
+        lblMaxJugadores.setBounds(250, 180, 200, 18);
 
-        jLabel6.setText("Ingrese el nombre de la categoria");
+        cmbMaxJugadores.setBackground(new java.awt.Color(255, 255, 255));
+        cmbMaxJugadores.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        cmbMaxJugadores.setForeground(new java.awt.Color(39, 39, 42));
+        cmbMaxJugadores.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2 jugadores", "3 jugadores", "4 jugadores", "5 jugadores", "6 jugadores", "7 jugadores", "8 jugadores" }));
+        cmbMaxJugadores.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        cmbMaxJugadores.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 212, 216), 1));
+        pnlFondo.add(cmbMaxJugadores);
+        cmbMaxJugadores.setBounds(250, 202, 206, 38);
 
-        jLabel7.setText("Cantidad Preguntas");
+        lblCantidadPreguntas.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblCantidadPreguntas.setForeground(new java.awt.Color(63, 63, 70));
+        lblCantidadPreguntas.setText("Cantidad de preguntas");
+        pnlFondo.add(lblCantidadPreguntas);
+        lblCantidadPreguntas.setBounds(24, 252, 200, 18);
 
-        jPanel3.setBackground(new java.awt.Color(204, 153, 255));
+        cmbCantidadPreguntas.setBackground(new java.awt.Color(255, 255, 255));
+        cmbCantidadPreguntas.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        cmbCantidadPreguntas.setForeground(new java.awt.Color(39, 39, 42));
+        cmbCantidadPreguntas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4 preguntas" }));
+        cmbCantidadPreguntas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        cmbCantidadPreguntas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 212, 216), 1));
+        pnlFondo.add(cmbCantidadPreguntas);
+        cmbCantidadPreguntas.setBounds(24, 274, 206, 38);
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
-        jLabel10.setText("ⓘ  Al crear la sala recibirás un PIN para compartir con los jugadores.");
+        lblTiempo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblTiempo.setForeground(new java.awt.Color(63, 63, 70));
+        lblTiempo.setText("Tiempo por pregunta");
+        pnlFondo.add(lblTiempo);
+        lblTiempo.setBounds(250, 252, 200, 18);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jLabel10)
-                .addGap(0, 12, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel10)
-                .addContainerGap())
-        );
+        cmbTiempo.setBackground(new java.awt.Color(255, 255, 255));
+        cmbTiempo.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        cmbTiempo.setForeground(new java.awt.Color(39, 39, 42));
+        cmbTiempo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10 segundos", "15 segundos", "20 segundos", "30 segundos" }));
+        cmbTiempo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        cmbTiempo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 212, 216), 1));
+        pnlFondo.add(cmbTiempo);
+        cmbTiempo.setBounds(250, 274, 206, 38);
 
-        jLabel8.setText("Jugadores Maximos");
+        lblInfo.setFont(new java.awt.Font("Segoe UI Symbol", 0, 12)); // NOI18N
+        lblInfo.setForeground(new java.awt.Color(109, 40, 217));
+        lblInfo.setText("ⓘ  Al crear la sala recibirás un PIN para compartir con los jugadores.");
+        lblInfo.setBackground(new java.awt.Color(243, 232, 255));
+        lblInfo.setOpaque(true);
+        lblInfo.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(221, 214, 254), 1), javax.swing.BorderFactory.createEmptyBorder(0, 11, 0, 8)));
+        pnlFondo.add(lblInfo);
+        lblInfo.setBounds(24, 328, 432, 40);
 
-        jLabel9.setText("Tiempo por Pregunta");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        btnCrear.setBackground(new java.awt.Color(204, 102, 255));
-        btnCrear.setText("Crear sala  →");
-
+        btnCancelarS.setBackground(new java.awt.Color(255, 255, 255));
+        btnCancelarS.setForeground(new java.awt.Color(63, 63, 70));
+        btnCancelarS.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 212, 216), 2));
+        btnCancelarS.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCancelarS.setText("Cancelar");
+        btnCancelarS.setContentAreaFilled(false);
+        btnCancelarS.setFocusPainted(false);
+        btnCancelarS.setOpaque(true);
+        btnCancelarS.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCancelarS.addActionListener(this::btnCancelarSActionPerformed);
+        pnlFondo.add(btnCancelarS);
+        btnCancelarS.setBounds(176, 386, 120, 40);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNombreSala, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtNombreCategoria, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtCantidadJ))
-                                .addContainerGap())))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtCantidadP, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnCancelarS)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCrear)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNombreSala, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNombreCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCantidadJ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCantidadP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCrear)
-                    .addComponent(btnCancelarS))
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
+        btnCrear.setBackground(new java.awt.Color(124, 58, 237));
+        btnCrear.setForeground(new java.awt.Color(255, 255, 255));
+        btnCrear.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnCrear.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCrear.setText("Crear sala  →");
+        btnCrear.setContentAreaFilled(false);
+        btnCrear.setFocusPainted(false);
+        btnCrear.setOpaque(true);
+        btnCrear.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCrear.addActionListener(this::btnCrearActionPerformed);
+        pnlFondo.add(btnCrear);
+        btnCrear.setBounds(308, 386, 148, 40);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        getContentPane().add(pnlFondo, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtNombreSalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreSalaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNombreSalaActionPerformed
+    private void btnCancelarSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarSActionPerformed
+        dispose();
+    }//GEN-LAST:event_btnCancelarSActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-   
+    private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
+        // TODO back: crear la sala con txtNombreSala, cmbCategoria, cmbMaxJugadores,
+        //            cmbCantidadPreguntas y cmbTiempo
+    }//GEN-LAST:event_btnCrearActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelarS;
     private javax.swing.JButton btnCrear;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextField txtCantidadJ;
-    private javax.swing.JTextField txtCantidadP;
-    private javax.swing.JTextField txtNombreCategoria;
+    private javax.swing.JComboBox<String> cmbCantidadPreguntas;
+    private javax.swing.JComboBox<String> cmbCategoria;
+    private javax.swing.JComboBox<String> cmbMaxJugadores;
+    private javax.swing.JComboBox<String> cmbTiempo;
+    private javax.swing.JLabel lblCantidadPreguntas;
+    private javax.swing.JLabel lblCategoria;
+    private javax.swing.JLabel lblEtiqueta;
+    private javax.swing.JLabel lblInfo;
+    private javax.swing.JLabel lblMaxJugadores;
+    private javax.swing.JLabel lblNombreSala;
+    private javax.swing.JLabel lblSubtitulo;
+    private javax.swing.JLabel lblTiempo;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JPanel pnlFondo;
     private javax.swing.JTextField txtNombreSala;
     // End of variables declaration//GEN-END:variables
 }

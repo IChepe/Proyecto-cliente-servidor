@@ -1,22 +1,58 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package ui;
 
 /**
+ * Diálogo modal para unirse a una sala con su PIN (HU-02).
+ * Solo interfaz: la lógica de cada botón la conecta el equipo de back.
  *
  * @author gabri
  */
-public class UnirseSalaframe extends javax.swing.JFrame {
-    
+public class UnirseSalaframe extends javax.swing.JDialog {
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(UnirseSalaframe.class.getName());
 
     /**
      * Creates new form UnirseSalaframe
      */
-    public UnirseSalaframe() {
+    public UnirseSalaframe(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
+        efectoHover(btnCancelarU, btnUnirse);
+        getRootPane().setDefaultButton(btnUnirse);
+        setLocationRelativeTo(parent);
+    }
+
+    /** Aclara (u oscurece si es blanco) el botón al pasar el mouse. */
+    private void efectoHover(javax.swing.AbstractButton... botones) {
+        for (javax.swing.AbstractButton boton : botones) {
+            boton.addMouseListener(new java.awt.event.MouseAdapter() {
+                private java.awt.Color base;
+
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent e) {
+                    if (boton.isEnabled()) {
+                        base = boton.getBackground();
+                        boton.setBackground(base.equals(java.awt.Color.WHITE)
+                                ? new java.awt.Color(244, 244, 245)
+                                : new java.awt.Color(
+                                        base.getRed() + (255 - base.getRed()) * 15 / 100,
+                                        base.getGreen() + (255 - base.getGreen()) * 15 / 100,
+                                        base.getBlue() + (255 - base.getBlue()) * 15 / 100));
+                    }
+                }
+
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent e) {
+                    if (base != null) {
+                        boton.setBackground(base);
+                        base = null;
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -28,134 +64,118 @@ public class UnirseSalaframe extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenu1 = new javax.swing.JMenu();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        pnlFondo = new javax.swing.JPanel();
+        lblTitulo = new javax.swing.JLabel();
+        lblSubtitulo = new javax.swing.JLabel();
+        lblPin = new javax.swing.JLabel();
         txtPinS = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        lblAyudaPin = new javax.swing.JLabel();
+        lblNombre = new javax.swing.JLabel();
         txtNombreU = new javax.swing.JTextField();
-        btnUnirse = new javax.swing.JButton();
         btnCancelarU = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
+        btnUnirse = new javax.swing.JButton();
 
-        jMenu1.setText("jMenu1");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Unirse a sala");
+        setResizable(false);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        pnlFondo.setBackground(new java.awt.Color(255, 255, 255));
+        pnlFondo.setPreferredSize(new java.awt.Dimension(420, 316));
+        pnlFondo.setLayout(null);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(24, 24, 27));
+        lblTitulo.setText("Unirse a sala");
+        pnlFondo.add(lblTitulo);
+        lblTitulo.setBounds(24, 22, 360, 30);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("Unirse a Sala ");
+        lblSubtitulo.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lblSubtitulo.setForeground(new java.awt.Color(113, 113, 122));
+        lblSubtitulo.setText("Ingresa el PIN que te compartió el anfitrión.");
+        pnlFondo.add(lblSubtitulo);
+        lblSubtitulo.setBounds(24, 54, 370, 20);
 
-        jLabel2.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel2.setText("Ingresa el PIN que te compartió el anfitrión");
+        lblPin.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblPin.setForeground(new java.awt.Color(63, 63, 70));
+        lblPin.setText("PIN de la sala");
+        pnlFondo.add(lblPin);
+        lblPin.setBounds(24, 92, 200, 18);
 
-        jLabel3.setText("PIN de la sala");
+        txtPinS.setBackground(new java.awt.Color(255, 255, 255));
+        txtPinS.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        txtPinS.setForeground(new java.awt.Color(24, 24, 27));
+        txtPinS.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 212, 216), 1), javax.swing.BorderFactory.createEmptyBorder(0, 11, 0, 11)));
+        txtPinS.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        pnlFondo.add(txtPinS);
+        txtPinS.setBounds(24, 114, 372, 42);
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel4.setText("El PIN tiene 6 dígitos.");
+        lblAyudaPin.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        lblAyudaPin.setForeground(new java.awt.Color(113, 113, 122));
+        lblAyudaPin.setText("El PIN tiene 4 dígitos.");
+        pnlFondo.add(lblAyudaPin);
+        lblAyudaPin.setBounds(24, 160, 360, 16);
 
-        jLabel5.setText("Nombre ");
+        lblNombre.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblNombre.setForeground(new java.awt.Color(63, 63, 70));
+        lblNombre.setText("Tu nombre");
+        pnlFondo.add(lblNombre);
+        lblNombre.setBounds(24, 182, 200, 18);
 
-        txtNombreU.addActionListener(this::txtNombreUActionPerformed);
+        txtNombreU.setBackground(new java.awt.Color(255, 255, 255));
+        txtNombreU.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        txtNombreU.setForeground(new java.awt.Color(24, 24, 27));
+        txtNombreU.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 212, 216), 1), javax.swing.BorderFactory.createEmptyBorder(0, 11, 0, 11)));
+        pnlFondo.add(txtNombreU);
+        txtNombreU.setBounds(24, 204, 372, 38);
 
-        btnUnirse.setBackground(new java.awt.Color(204, 102, 255));
-        btnUnirse.setText("Unirse");
-
+        btnCancelarU.setBackground(new java.awt.Color(255, 255, 255));
+        btnCancelarU.setForeground(new java.awt.Color(63, 63, 70));
+        btnCancelarU.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 212, 216), 2));
+        btnCancelarU.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCancelarU.setText("Cancelar");
+        btnCancelarU.setContentAreaFilled(false);
+        btnCancelarU.setFocusPainted(false);
+        btnCancelarU.setOpaque(true);
+        btnCancelarU.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCancelarU.addActionListener(this::btnCancelarUActionPerformed);
+        pnlFondo.add(btnCancelarU);
+        btnCancelarU.setBounds(148, 258, 110, 40);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnCancelarU)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnUnirse))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtNombreU, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtPinS)))
-                .addContainerGap(44, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtPinS, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNombreU, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnUnirse)
-                    .addComponent(btnCancelarU))
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
+        btnUnirse.setBackground(new java.awt.Color(124, 58, 237));
+        btnUnirse.setForeground(new java.awt.Color(255, 255, 255));
+        btnUnirse.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnUnirse.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnUnirse.setText("Unirse");
+        btnUnirse.setContentAreaFilled(false);
+        btnUnirse.setFocusPainted(false);
+        btnUnirse.setOpaque(true);
+        btnUnirse.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUnirse.addActionListener(this::btnUnirseActionPerformed);
+        pnlFondo.add(btnUnirse);
+        btnUnirse.setBounds(270, 258, 126, 40);
 
-        jMenu2.setText("Unirse a sala");
-        jMenuBar1.add(jMenu2);
-        jMenuBar1.add(jMenu3);
-
-        setJMenuBar(jMenuBar1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        getContentPane().add(pnlFondo, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtNombreUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreUActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNombreUActionPerformed
+    private void btnCancelarUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarUActionPerformed
+        dispose();
+    }//GEN-LAST:event_btnCancelarUActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    
+    private void btnUnirseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUnirseActionPerformed
+        // TODO back: unirse a la sala con txtPinS y txtNombreU
+    }//GEN-LAST:event_btnUnirseActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelarU;
     private javax.swing.JButton btnUnirse;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblAyudaPin;
+    private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblPin;
+    private javax.swing.JLabel lblSubtitulo;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JPanel pnlFondo;
     private javax.swing.JTextField txtNombreU;
     private javax.swing.JTextField txtPinS;
     // End of variables declaration//GEN-END:variables
