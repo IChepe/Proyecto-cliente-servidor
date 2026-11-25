@@ -1,20 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package service;
 import java.util.ArrayList;
 import model.Pregunta;
 
 /**
  *
- * @author striv
+ * @author AOV
  */
 public class GestorPreguntas {
   private ArrayList<Pregunta> preguntas;
+    private ArrayList<String> categorias;
 
     public GestorPreguntas() {
         preguntas = new ArrayList<>();
+        categorias = new ArrayList<>();
+        categorias.add("General");
+        categorias.add("Tecnologia");
+        categorias.add("Deportes");
         cargarPreguntas();
     }
 
@@ -26,8 +27,8 @@ public class GestorPreguntas {
                 "A", "General"));
 
         preguntas.add(new Pregunta(
-                "Dias de una semana",
-                "5", "6", "7", "8",
+                "Capital de Urugay",
+                "Buenos Aires", "Santiago", "Montevideo", "Cordoba",
                 "C", "General"));
 
         preguntas.add(new Pregunta(
@@ -36,12 +37,12 @@ public class GestorPreguntas {
                 "B", "General"));
 
         preguntas.add(new Pregunta(
-                "Cuantos meses tiene un año",
-                "10", "11", "12", "13",
+                "Cuantos huesos tiene el cuerpo humano",
+                "310", "189", "206", "213",
                 "C", "General"));
 
         preguntas.add(new Pregunta(
-                "Lenguaje del proyecto",
+                "Lenguaje del curso",
                 "Python", "Java", "HTML", "PHP",
                 "B", "Tecnologia"));
 
@@ -71,12 +72,12 @@ public class GestorPreguntas {
                 "C", "Deportes"));
 
         preguntas.add(new Pregunta(
-                "Puntos por un tiro libre de baloncesto",
-                "1", "2", "3", "4",
+                "Puntos por un partido ganado en Futbol",
+                "3", "1", "2", "4",
                 "A", "Deportes"));
 
         preguntas.add(new Pregunta(
-                "Cuantos aros tiene una cancha de baloncesto",
+                "Cuantos aros tiene una cancha de basket",
                 "1", "2", "3", "4",
                 "B", "Deportes"));
     }
@@ -93,6 +94,74 @@ public class GestorPreguntas {
 
         preguntas.add(pregunta);
         return true;
+    }
+
+    public boolean editarPregunta(Pregunta vieja, Pregunta nueva) {
+
+        // la nueva se valida al agregarla y despues se quita la vieja xd
+        if (!agregarPregunta(nueva)) {
+            return false;
+        }
+
+        preguntas.remove(vieja);
+        return true;
+    }
+
+    public boolean eliminarPregunta(Pregunta pregunta) {
+        return preguntas.remove(pregunta);
+    }
+
+    public ArrayList<Pregunta> buscarPreguntas(
+            String categoria, String texto) {
+
+        ArrayList<Pregunta> encontradas = new ArrayList<>();
+
+        if (texto == null) {
+            return encontradas;
+        }
+
+        for (Pregunta pregunta : preguntas) {
+
+            if ((categoria == null
+                    || pregunta.getCategoria().equalsIgnoreCase(categoria))
+                    && pregunta.getEnunciado().toLowerCase().contains(
+                            texto.toLowerCase())) {
+
+                encontradas.add(pregunta);
+            }
+        }
+
+        return encontradas;
+    }
+
+    public ArrayList<String> getCategorias() {
+        return categorias;
+    }
+
+    public boolean agregarCategoria(String categoria) {
+
+        if (categoria == null || categoria.trim().isEmpty()) {
+            return false;
+        }
+
+        for (String existente : categorias) {
+
+            if (existente.equalsIgnoreCase(categoria.trim())) {
+                return false;
+            }
+        }
+
+        categorias.add(categoria.trim());
+        return true;
+    }
+
+    public boolean eliminarCategoria(String categoria) {
+
+        if (categoria == null || contarPreguntas(categoria) > 0) {
+            return false;
+        }
+
+        return categorias.remove(categoria);
     }
 
     public int contarPreguntas(String categoria) {
@@ -134,3 +203,4 @@ public class GestorPreguntas {
         return seleccionadas;
     }
 }
+// AOV.
