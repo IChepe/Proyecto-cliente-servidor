@@ -4,15 +4,26 @@
  */
 package ui;
 
+import javax.swing.JOptionPane;
+
 /**
  * Diálogo modal para configurar y crear una sala (HU-01).
- * Solo interfaz: la lógica de cada botón la conecta el equipo de back.
+ *
+ * Igual que matriculaDialog del Caso de Estudio: valida los datos y los deja
+ * listos para que VentanaInicio cree la sala con el GestorSalas.
  *
  * @author gabri
  */
 public class CrearSalaframe extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CrearSalaframe.class.getName());
+
+    private boolean aceptado = false;
+    private String nombreSala;
+    private String categoria;
+    private int cantidadPreguntas;
+    private int capacidad;
+    private int tiempoPorPregunta;
 
     /**
      * Creates new form CrearSalaframe
@@ -21,11 +32,66 @@ public class CrearSalaframe extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         cmbMaxJugadores.setSelectedItem("8 jugadores");
+        cmbCantidadPreguntas.setSelectedItem("4 preguntas");
         cmbTiempo.setSelectedItem("20 segundos");
         estilizarCombos(cmbCategoria, cmbMaxJugadores, cmbCantidadPreguntas, cmbTiempo);
         efectoHover(btnCancelarS, btnCrear);
         getRootPane().setDefaultButton(btnCrear);
         setLocationRelativeTo(parent);
+    }
+
+    /** true si el usuario presionó "Crear sala" y los datos son válidos. */
+    public boolean isAceptado() {
+        return aceptado;
+    }
+
+    public String getNombreSala() {
+        return nombreSala;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public int getCantidadPreguntas() {
+        return cantidadPreguntas;
+    }
+
+    public int getCapacidad() {
+        return capacidad;
+    }
+
+    public int getTiempoPorPregunta() {
+        return tiempoPorPregunta;
+    }
+
+    private void guardar() {
+        String nombre = txtNombreSala.getText().trim();
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "El nombre de la sala es obligatorio.",
+                    "Validación",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            // Los combos dicen "8 jugadores", "4 preguntas", "20 segundos": se toma el número
+            capacidad = Integer.parseInt(cmbMaxJugadores.getSelectedItem().toString().split(" ")[0]);
+            cantidadPreguntas = Integer.parseInt(cmbCantidadPreguntas.getSelectedItem().toString().split(" ")[0]);
+            tiempoPorPregunta = Integer.parseInt(cmbTiempo.getSelectedItem().toString().split(" ")[0]);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Las opciones seleccionadas no son válidas.",
+                    "Validación",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        nombreSala = nombre;
+        categoria = cmbCategoria.getSelectedItem().toString();
+        aceptado = true;
+        dispose();
     }
 
     /** Combo plano: fondo blanco, flecha gris y texto con margen, como en el diseño. */
@@ -176,7 +242,7 @@ public class CrearSalaframe extends javax.swing.JDialog {
         cmbCategoria.setBackground(new java.awt.Color(255, 255, 255));
         cmbCategoria.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         cmbCategoria.setForeground(new java.awt.Color(39, 39, 42));
-        cmbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "General" }));
+        cmbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "General", "Tecnologia", "Deportes" }));
         cmbCategoria.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cmbCategoria.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 212, 216), 1));
         pnlFondo.add(cmbCategoria);
@@ -206,7 +272,7 @@ public class CrearSalaframe extends javax.swing.JDialog {
         cmbCantidadPreguntas.setBackground(new java.awt.Color(255, 255, 255));
         cmbCantidadPreguntas.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         cmbCantidadPreguntas.setForeground(new java.awt.Color(39, 39, 42));
-        cmbCantidadPreguntas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "4 preguntas" }));
+        cmbCantidadPreguntas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 pregunta", "2 preguntas", "3 preguntas", "4 preguntas" }));
         cmbCantidadPreguntas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cmbCantidadPreguntas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 212, 216), 1));
         pnlFondo.add(cmbCantidadPreguntas);
@@ -268,12 +334,12 @@ public class CrearSalaframe extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarSActionPerformed
+        aceptado = false;
         dispose();
     }//GEN-LAST:event_btnCancelarSActionPerformed
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
-        // TODO back: crear la sala con txtNombreSala, cmbCategoria, cmbMaxJugadores,
-        //            cmbCantidadPreguntas y cmbTiempo
+        guardar();
     }//GEN-LAST:event_btnCrearActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

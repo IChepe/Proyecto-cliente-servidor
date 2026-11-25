@@ -4,9 +4,13 @@
  */
 package ui;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Jugador;
+import model.Sala;
+
 /**
  * Sala de espera: PIN de la sala y jugadores conectados (HU-01, HU-03).
- * Solo interfaz: la lógica de cada botón la conecta el equipo de back.
  *
  * @author gabri
  */
@@ -14,25 +18,65 @@ public class VentanaEsperaFrame extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaEsperaFrame.class.getName());
 
+    private final VentanaInicio ventanaInicio;
+    private final Sala sala;
+    private final DefaultTableModel tableModel;
+
     /**
      * Creates new form VentanaEsperaFrame
      */
-    public VentanaEsperaFrame() {
+    public VentanaEsperaFrame(VentanaInicio ventanaInicio, Sala sala, int tiempoPorPregunta) {
         initComponents();
-        tblListaConectados.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{}, new String[]{"Jugador", "Rol", "Estado"}) {
+        this.ventanaInicio = ventanaInicio;
+        this.sala = sala;
+
+        String[] cols = {"Jugador", "Rol", "Estado"};
+        tableModel = new DefaultTableModel(cols, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-        });
+        };
+        tblListaConectados.setModel(tableModel);
         estilizarTabla(tblListaConectados, scrJugadores, 52, 40);
         columna(tblListaConectados, 0, 184, java.awt.Color.WHITE, "Segoe UI", java.awt.Font.BOLD, 14);
         columna(tblListaConectados, 1, 130, new java.awt.Color(196, 181, 253), "Segoe UI", java.awt.Font.PLAIN, 13);
         // "Segoe UI Symbol" tiene el símbolo ✔ para "✔ Listo"
         columna(tblListaConectados, 2, 130, new java.awt.Color(233, 213, 255), "Segoe UI Symbol", java.awt.Font.BOLD, 12);
         efectoHover(btnCopiarPin, btnSalirSala, btnEstado, btnIniciarP);
+
+        // Datos de la sala creada
+        setTitle("Sala de espera - " + sala.getNombre());
+        lblNombreSala.setText(sala.getNombre());
+        lblDetalleSala.setText(sala.getCategoria() + " · " + sala.getCantidadPreguntas()
+                + " preguntas · " + tiempoPorPregunta + " s");
+        SetCodigo.setText(sala.getCodigo());
+        barraProgreso.setMaximum(sala.getCapacidad());
+        refrescarTabla();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+    }
+
+    private void refrescarTabla() {
+        tableModel.setRowCount(0);
+
+        int posicion = 0;
+        for (Jugador j : sala.getJugadores()) {
+            String rol = "Jugador";
+            if (posicion == 0) {
+                rol = "Anfitrión";
+            }
+            String estado = "… Esperando";
+            if (j.isListo()) {
+                estado = "✔ Listo";
+            }
+            tableModel.addRow(new Object[]{j.getNombre(), rol, estado});
+            posicion++;
+        }
+
+        lblConectados.setText(sala.getJugadores().size() + " / " + sala.getCapacidad());
+        barraProgreso.setValue(sala.getJugadores().size());
     }
 
     /** Encabezado morado, filas altas y sin líneas verticales, como en el diseño. */
@@ -328,7 +372,16 @@ public class VentanaEsperaFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCopiarPinActionPerformed
 
     private void btnSalirSalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirSalaActionPerformed
-        // TODO back: salir de la sala
+        int opt = JOptionPane.showConfirmDialog(
+                this,
+                "¿Desea salir de la sala?",
+                "Salir",
+                JOptionPane.YES_NO_OPTION
+        );
+        if (opt == JOptionPane.YES_OPTION) {
+            ventanaInicio.setVisible(true);
+            dispose();
+        }
     }//GEN-LAST:event_btnSalirSalaActionPerformed
 
     private void btnEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEstadoActionPerformed

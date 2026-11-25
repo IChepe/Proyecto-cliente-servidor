@@ -4,9 +4,17 @@
  */
 package ui;
 
+import javax.swing.JOptionPane;
+import model.Jugador;
+import model.Sala;
+import service.GestorPreguntas;
+import service.GestorSalas;
+
 /**
  * Pantalla de entrada del jugador (HU-01, HU-02). Reemplaza a MainFrame.
- * Solo interfaz: la lógica de cada botón la conecta el equipo de back.
+ *
+ * Igual que mainFrame del Caso de Estudio: recibe los gestores desde el main
+ * y les pide a ellos crear la sala.
  *
  * @author Los chambeadores
  */
@@ -14,15 +22,64 @@ public class VentanaInicio extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaInicio.class.getName());
 
+    private final GestorSalas gestorSalas;
+    private final GestorPreguntas gestorPreguntas;
+
     /**
      * Creates new form VentanaInicio
      */
-    public VentanaInicio() {
+    public VentanaInicio(GestorSalas gestorSalas, GestorPreguntas gestorPreguntas) {
         initComponents();
+        this.gestorSalas = gestorSalas;
+        this.gestorPreguntas = gestorPreguntas;
         ponerPlaceholder(txtNombreUsuario, "Ej. Chepe");
         efectoHover(btnCrearSala, btnUnirse, btnPreguntas);
         getRootPane().setDefaultButton(btnCrearSala);
         setLocationRelativeTo(null);
+    }
+
+    private void crearSala() {
+        String nombreJugador = txtNombreUsuario.getText().trim();
+        if (nombreJugador.isEmpty()) {
+            mostrarError("Ingresa tu nombre de jugador antes de crear una sala.");
+            return;
+        }
+
+        CrearSalaframe dialog = new CrearSalaframe(this, true);
+        dialog.setVisible(true);
+
+        if (!dialog.isAceptado()) {
+            return;
+        }
+
+        int disponibles = gestorPreguntas.contarPreguntas(dialog.getCategoria());
+        if (dialog.getCantidadPreguntas() > disponibles) {
+            mostrarError("La categoría " + dialog.getCategoria() + " solo tiene "
+                    + disponibles + " preguntas.");
+            return;
+        }
+
+        try {
+            Sala sala = gestorSalas.crearSala(dialog.getNombreSala(), dialog.getCategoria(),
+                    dialog.getCantidadPreguntas(), dialog.getCapacidad());
+            if (sala == null) {
+                mostrarError("No se pudo crear la sala. Revisa los datos.");
+                return;
+            }
+
+            // Quien crea la sala entra de primero (es el anfitrión)
+            sala.agregarJugador(new Jugador(nombreJugador));
+
+            VentanaEsperaFrame espera = new VentanaEsperaFrame(this, sala, dialog.getTiempoPorPregunta());
+            espera.setVisible(true);
+            setVisible(false);
+        } catch (Exception ex) {
+            mostrarError("Ocurrió un error inesperado: " + ex.getMessage());
+        }
+    }
+
+    private void mostrarError(String msg) {
+        JOptionPane.showMessageDialog(this, msg, "Atención", JOptionPane.ERROR_MESSAGE);
     }
 
     /** Texto gris de ayuda que se muestra mientras el campo está vacío. */
@@ -271,7 +328,7 @@ public class VentanaInicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCrearSalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearSalaActionPerformed
-        // TODO back: validar txtNombreUsuario y abrir CrearSalaframe
+        crearSala();
     }//GEN-LAST:event_btnCrearSalaActionPerformed
 
     private void btnUnirseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUnirseActionPerformed
